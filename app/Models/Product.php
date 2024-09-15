@@ -16,6 +16,7 @@ class Product extends Model
         'price',
         'category_id',
         'brand_id',
+        'stock',
     ];
 
     /**
@@ -42,7 +43,7 @@ class Product extends Model
      */
     public function stock()
     {
-        return $this->hasOne(Stock::class);
+        return $this->hasOne(Stock::class, 'quantity');
     }
 
     /**

@@ -18,8 +18,9 @@ return new class extends Migration
             $table->string('name')->comment('商品名称')->nullable(false);
             $table->text('description')->comment('商品描述')->nullable(false);
             $table->decimal('price',10,2)->comment('商品价格')->nullable(false);
-            $table->foreignId('category_id' )->comment('分类ID')->nullable()->onDelete('set null');;
-            $table->foreignId('brand_id')->comment('品牌ID')->nullable()->onDelete('set null'); ;
+            $table->foreignId('category_id' )->comment('分类ID')->nullable()->onDelete('set null');
+            $table->foreignId('brand_id')->comment('品牌ID')->nullable()->onDelete('set null');
+            $table->integer('stock_quantity')->comment('商品库存')->default(0);
             $table->timestamps();
         });
     }

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Brand;
+use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -35,6 +37,7 @@ class ProductController extends Controller
                 'name' => 'required|string|max:255',
                 'description' => 'nullable|string',
                 'price' => 'required|numeric|min:0',
+                'stock' => 'required|numeric|min:0',
                 'category_id' => 'required|exists:categories,id',
                 'brand_id' => 'required|exists:brands,id',
             ]);
@@ -52,7 +55,6 @@ class ProductController extends Controller
     {
 
         $products = Product::all();
-
 
         // 使用分页，每页显示10个商品
         $products = Product::paginate(10);
@@ -114,8 +116,7 @@ class ProductController extends Controller
             'description' => 'required|string',
             'price' => 'required|numeric',
             'stock' => 'required|integer',
-            'category_id' => 'required|exists:categories,id',
-            'brand_id' => 'required|exists:brands,id',
+
         ]);
 
         // 绑定数据到 Product 模型
@@ -124,13 +125,11 @@ class ProductController extends Controller
         $product->description = $request->input('description');
         $product->price = $request->input('price');
         $product->stock = $request->input('stock');
-        $product->category_id = $request->input('category_id');
-        $product->brand_id = $request->input('brand_id');
 
         // 保存更新后的数据到数据库
         $product->save();
 
-        return redirect()->route('product.index');
+        return redirect()->route('product.index')->with('success', '商品更新成功');
     }
 
     /**
@@ -146,12 +145,48 @@ class ProductController extends Controller
         $query = $request->input('search');
 
         if ($query) {
-            $products = Product::where('name', 'like', "%{$query}%")
+            $product = Product::where('name', 'like', "%{$query}%")
                 ->orWhere('description', 'like', "%{$query}%")
                 ->get();
 
-            return view('product.search', compact('products', 'query'));
+            return view('product.search', compact('product', 'query'));
         }
     }
+
+    public function filter(Request $request)
+    {
+        $type = $request->input('type');
+
+        // 获取所有分类和品牌
+        $categories = Category::all();
+        $brands = Brand::all();
+
+        // 根据筛选类型决定显示的筛选内容
+        if ($type === 'category') {
+            $product = Product::with('category')->get();
+            return view('product.filters', compact('product', 'categories', 'brands', 'type'));
+        }
+
+        if ($type === 'brand') {
+            $product = Product::with('brand')->get();
+            return view('product.filters', compact('product', 'categories', 'brands', 'type'));
+        }
+
+        if ($type === 'price') {
+            $product = Product::all(); // Price筛选可能会涉及更复杂的逻辑
+            return view('product.filters', compact('product', 'categories', 'brands', 'type'));
+        }
+
+        if ($type === 'name') {
+            $product = Product::all(); // Name筛选也可能需要用户输入或进一步逻辑
+            return view('product.filters', compact('product', 'categories', 'brands', 'type'));
+        }
+
+        // 如果没有匹配的类型，返回商品列表
+        $product = Product::paginate(10);
+        return view('product.index', compact('product'));
+    }
+
+
 
 }

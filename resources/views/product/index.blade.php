@@ -7,6 +7,13 @@
         <div class="card-body">
             <h2>商品列表</h2>
             <hr>
+            <!-- 筛选按钮 -->
+            <div class="btn-group mb-3">
+                <a href="{{ route('product.filter', ['type' => 'category']) }}" class="btn btn-secondary">分类</a>
+                <a href="{{ route('product.filter', ['type' => 'brand']) }}" class="btn btn-secondary">品牌</a>
+                <a href="{{ route('product.filter', ['type' => 'price']) }}" class="btn btn-secondary">价格</a>
+                <a href="{{ route('product.filter', ['type' => 'name']) }}" class="btn btn-secondary">名称</a>
+            </div>
             <!-- 搜索表单 -->
             <form action="{{ route('product.search') }}" method="GET" class="mb-3">
                 <div class="input-group">
@@ -20,6 +27,8 @@
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">商品名称</th>
+                    <th scope="col">分类</th>
+                    <th scope="col">品牌</th>
                     <th scope="col">商品描述</th>
                     <th scope="col">单价</th>
                     <th scope="col">库存</th>
@@ -32,6 +41,8 @@
                     <tr>
                         <th scope="row">{{ $product->id }}</th>
                         <td>{{ $product->name }}</td>
+                        <td>{{ $product->category_id}}</td>
+                        <td>{{ $product->brand_id }}</td>
                         <td>{{ $product->description }}</td>
                         <td>{{ $product->price }}</td>
                         <td>{{ $product->stock }}</td>
@@ -93,6 +104,7 @@
                     @endif
                 </ul>
             </nav>
+
         </div>
     </div>
 
