@@ -32,4 +32,8 @@ Route::prefix('product')->group(function () {
     Route::get('delete/{id}', [ProductController::class, 'delete'])->name('product.delete');
 });
 
-Route::resource('products', ProductController::class);
+    // 搜索商品
+    Route::get('index', [ProductController::class, 'index'])->name('product.index');
+    Route::get('/product/search', [ProductController::class, 'search'])->name('product.search');
+    // 筛选商品
+    Route::get('/product/filters', [ProductController::class, 'filter'])->name('product.filter');
