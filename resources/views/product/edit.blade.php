@@ -27,7 +27,7 @@
                 </div>
                 <div class="mb-3">
                     <label for="stock" class="form-label">库存</label>
-                    <input type="number" class="form-control" name="stock" id="stock" value="{{ $product->stock }}"
+                    <input type="number" class="form-control" name="stock" id="stock" value="{{ $product->stock->quantity }}"
                            placeholder="请输入商品库存">
                 </div>
                 <button type="submit" class="btn btn-primary">更新商品</button>

@@ -124,7 +124,7 @@ class ProductController extends Controller
         $product->name = $request->input('name');
         $product->description = $request->input('description');
         $product->price = $request->input('price');
-        $product->stock = $request->input('stock');
+        $product->stock->quantity = $request->input('stock');
 
         // 保存更新后的数据到数据库
         $product->save();

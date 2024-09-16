@@ -12,7 +12,7 @@
             <h5 class="card-title">商品名称：{{ $product->name }}</h5>
             <p class="card-text">描述：{{ $product->description }}</p>
             <p class="card-text">单价：{{ $product->price }}</p>
-            <p class="card-text">库存：{{ $product->stock->quantity }}</p>
+            <p class="card-text">库存：{{ $product->stock->quantity ?? 0 }}</p>
             <a href="{{ route('product.edit', $product->id) }}" class="btn btn-primary">编辑</a>
         </div>
     </div>
