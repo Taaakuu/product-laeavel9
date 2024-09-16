@@ -45,7 +45,7 @@
                         <td>{{ $product->brand_id }}</td>
                         <td>{{ $product->description }}</td>
                         <td>{{ $product->price }}</td>
-                        <td>{{ $product->stock }}</td>
+                        <td>{{ $product->stock->quantity ?? 0 }}</td>
                         <td>{{ $product->created_at }}</td>
                         <td>
                             <a href="{{ route('product.show', $product->id) }}" class="btn btn-info btn-sm">详情</a>

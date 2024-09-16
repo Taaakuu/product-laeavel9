@@ -14,7 +14,7 @@ class Stock extends Model
     // 关联到商品模型
     public function product()
     {
-        return $this->belongsTo(Product::class,'quantity');
+        return $this->belongsTo(Product::class,'product_id');
     }
 }
 

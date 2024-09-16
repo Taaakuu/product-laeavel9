@@ -43,7 +43,7 @@ class Product extends Model
      */
     public function stock()
     {
-        return $this->hasOne(Stock::class, 'quantity');
+        return $this->hasOne(Stock::class, 'product_id');
     }
 
     /**
