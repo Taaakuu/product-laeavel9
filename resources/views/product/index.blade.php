@@ -6,6 +6,7 @@
     <div class="card mt-5">
         <div class="card-body">
             <h2>商品列表</h2>
+            <a href="{{ route('product.create') }}" class="btn btn-primary ml-auto">添加商品</a>
             <hr>
             <!-- 筛选按钮 -->
             <div class="btn-group mb-3">
