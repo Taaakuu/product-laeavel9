@@ -140,18 +140,29 @@ class ProductController extends Controller
      */
     public function search(Request $request)
     {
-        // 处理搜索请求，根据输入搜索产品
-        // 然后返回搜索结果页面
+        // 获取搜索输入内容
         $query = $request->input('search');
 
         if ($query) {
-            $product = Product::where('name', 'like', "%{$query}%")
-                ->orWhere('description', 'like', "%{$query}%")
+            // 执行搜索，按商品编号、名称、品牌搜索
+            $products = Product::where('id', 'like', "%{$query}%") // 商品编号
+            ->orWhere('name', 'like', "%{$query}%") // 商品名称
+            ->orWhereHas('brand', function ($q) use ($query) {
+                $q->where('name', 'like', "%{$query}%"); // 商品品牌名称
+            })
                 ->get();
 
-            return view('product.search', compact('product', 'query'));
+            return view('product.search', compact('products', 'query'));
         }
+
+        return view('product.search')->withErrors('请输入搜索条件');
     }
+    /**
+     * 筛选商品
+     *
+     * @param Request $request
+     * @return Application|Factory|View
+     */
 
     public function filter(Request $request)
     {
