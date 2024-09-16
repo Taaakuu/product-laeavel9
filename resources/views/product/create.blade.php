@@ -13,6 +13,14 @@
                     <label for="name" class="form-label"><span class="badge text-bg-primary">名称</span></label>
                     <input type="text" class="form-control" name="name" id="name" placeholder="请输入商品名称">
                 </div>
+                <div class="mb-3">
+                    <label for="name" class="form-label"><span class="badge text-bg-primary">分类</span></label>
+                    <input type="text" class="form-control" name="name" id="name" placeholder="请输入商品名称">
+                </div>
+                <div class="mb-3">
+                    <label for="name" class="form-label"><span class="badge text-bg-primary">品牌</span></label>
+                    <input type="text" class="form-control" name="name" id="name" placeholder="请输入商品名称">
+                </div>
 
                 <div class="mb-3">
                     <label for="description" class="form-label"><span class="badge text-bg-info">描述</span></label>
@@ -25,6 +33,10 @@
                 <div class="mb-3">
                     <label for="stock" class="form-label"><span class="badge text-bg-success">库存</span></label>
                     <input type="number" class="form-control" name="stock" id="stock" placeholder="请输入商品库存">
+                </div>
+                <div class="mb-3">
+                    <label for="images" class="form-label">Images</label>
+                    <input type="file" name="images[]" class="form-control" id="images" multiple>
                 </div>
                 <button type="submit" class="btn btn-primary">添加商品</button>
             </form>
