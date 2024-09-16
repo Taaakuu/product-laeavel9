@@ -37,19 +37,18 @@
         </form>
 
         <!-- 显示筛选结果 -->
-        @if(isset($products))
+        @if(isset($product))
             <h2 class="mt-5">筛选结果</h2>
             <div class="row">
                 @foreach($products as $product)
                     <div class="col-md-4">
                         <div class="card mb-4">
-                            <img src="{{ $product->image_url }}" class="card-img-top" alt="{{ $product->name }}">
                             <div class="card-body">
-                                <h5 class="card-title">{{ $product->name }}</h5>
-                                <p class="card-text">{{ $product->description }}</p>
-                                <p class="card-text"><strong>价格:</strong> ¥{{ $product->price }}</p>
-                                <p class="card-text"><strong>分类:</strong> {{ $product->category->name }}</p>
-                                <p class="card-text"><strong>品牌:</strong> {{ $product->brand->name }}</p>
+                                <h5 class="card-title">{{ $products->name }}</h5>
+                                <p class="card-text">{{ $products->description }}</p>
+                                <p class="card-text"><strong>价格:</strong> ¥{{ $products->price }}</p>
+                                <p class="card-text"><strong>分类:</strong> {{ $products->category->name }}</p>
+                                <p class="card-text"><strong>品牌:</strong> {{ $products->brand->name }}</p>
                             </div>
                         </div>
                     </div>
