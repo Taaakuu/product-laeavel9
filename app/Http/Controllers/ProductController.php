@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\ProductImage;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -29,7 +30,12 @@ class ProductController extends Controller
         return view('product.create');
     }
 
-
+    /**
+     * 添加商品
+     *
+     * @param Request $request
+     * @return RedirectResponse
+     */
     public function create(Request $request):RedirectResponse
     {
         // 验证数据并创建商品
@@ -40,7 +46,20 @@ class ProductController extends Controller
                 'stock' => 'required|numeric|min:0',
                 'category_id' => 'required|exists:categories,id',
                 'brand_id' => 'required|exists:brands,id',
+                'images.*' => 'nullable|mimes:jpg,jpeg,png|max:2048'
             ]);
+
+        // 处理图片上传
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $path = $image->store('images', 'public'); // 存储图片
+                $product = $product = new Product();
+                ProductImage::create([
+                    'product_id' => $product->id,
+                    'image_path' => $path,
+                ]);
+            }
+        }
 
         // 成功后重定向到产品列表页面
         return redirect()->route('product.index')->with('success', '商品创建成功');
@@ -174,28 +193,28 @@ class ProductController extends Controller
 
         // 根据筛选类型决定显示的筛选内容
         if ($type === 'category') {
-            $product = Product::with('category')->get();
-            return view('product.filters', compact('product', 'categories', 'brands', 'type'));
+            $products = Product::with('category')->get();
+            return view('product.filters', compact('products', 'categories', 'brands', 'type'));
         }
 
         if ($type === 'brand') {
-            $product = Product::with('brand')->get();
-            return view('product.filters', compact('product', 'categories', 'brands', 'type'));
+            $products = Product::with('brand')->get();
+            return view('product.filters', compact('products', 'categories', 'brands', 'type'));
         }
 
         if ($type === 'price') {
-            $product = Product::all(); // Price筛选可能会涉及更复杂的逻辑
-            return view('product.filters', compact('product', 'categories', 'brands', 'type'));
+            $products = Product::all(); // Price筛选可能会涉及更复杂的逻辑
+            return view('product.filters', compact('products', 'categories', 'brands', 'type'));
         }
 
         if ($type === 'name') {
-            $product = Product::all(); // Name筛选也可能需要用户输入或进一步逻辑
-            return view('product.filters', compact('product', 'categories', 'brands', 'type'));
+            $products = Product::all(); // Name筛选也可能需要用户输入或进一步逻辑
+            return view('product.filters', compact('products', 'categories', 'brands', 'type'));
         }
 
         // 如果没有匹配的类型，返回商品列表
-        $product = Product::paginate(10);
-        return view('product.index', compact('product'));
+        $products = Product::paginate(10);
+        return view('product.index', compact('products'));
     }
 
 
