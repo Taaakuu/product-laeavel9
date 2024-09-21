@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('layouts.app')
 
 @section('title', '搜索结果')
 
@@ -38,8 +38,10 @@
                             <td>{{ $product->created_at }}</td>
                             <td>
                                 <a href="{{ route('product.show', $product->id) }}" class="btn btn-info btn-sm">详情</a>
-                                <a href="{{ route('product.edit', $product->id) }}" class="btn btn-primary btn-sm">编辑</a>
-                                <a href="{{ route('product.delete', $product->id) }}" class="btn btn-danger btn-sm">删除</a>
+                                <a href="{{ route('product.edit', $product->id) }}"
+                                   class="btn btn-primary btn-sm">编辑</a>
+                                <a href="{{ route('product.delete', $product->id) }}"
+                                   class="btn btn-danger btn-sm">删除</a>
                             </td>
                         </tr>
                     @endforeach

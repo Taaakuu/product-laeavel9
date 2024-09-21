@@ -1,62 +1,104 @@
-@extends('layout')
+@extends('layouts.app')
 
 @section('title', '商品列表')
 
 @section('content')
     <div class="card mt-5">
         <div class="card-body">
-            <h2>商品列表</h2>
-            <a href="{{ route('product.create') }}" class="btn btn-primary ml-auto">添加商品</a>
-            <hr>
-            <!-- 筛选按钮 -->
-            <div class="btn-group mb-3">
-                <a href="{{ route('product.filter', ['type' => 'category']) }}" class="btn btn-secondary">分类</a>
-                <a href="{{ route('product.filter', ['type' => 'brand']) }}" class="btn btn-secondary">品牌</a>
-                <a href="{{ route('product.filter', ['type' => 'price']) }}" class="btn btn-secondary">价格</a>
-                <a href="{{ route('product.filter', ['type' => 'name']) }}" class="btn btn-secondary">名称</a>
-            </div>
-            <!-- 搜索表单 -->
-            <form action="{{ route('product.search') }}" method="GET" class="mb-3">
-                <div class="input-group">
-                    <input type="text" name="search" class="form-control" placeholder="搜索商品" value="{{ request('search') }}">
-                    <button type="submit" class="btn btn-primary">搜索</button>
+            <!-- 筛选表单 -->
+            <form action="{{ route('product.filter') }}" method="GET" class="mb-3">
+                <div class="row">
+                    <!-- 商品分类筛选 -->
+                    <div class="col-md-3">
+                        <label for="category" class="form-label">分类</label>
+                        <select name="category" id="category" class="form-select">
+                            <option value="">全部分类</option>
+                            @foreach($categories as $category)
+                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <!-- 品牌筛选 -->
+                    <div class="col-md-3">
+                        <label for="brand" class="form-label">品牌</label>
+                        <select name="brand" id="brand" class="form-select">
+                            <option value="">全部品牌</option>
+                            @foreach($brands as $brand)
+                                <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <!-- 价格区间筛选 -->
+                    <div class="col-md-3">
+                        <label for="min_price" class="form-label">最低价格</label>
+                        <input type="number" name="min_price" id="min_price" class="form-control" placeholder="0" min="0">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="max_price" class="form-label">最高价格</label>
+                        <input type="number" name="max_price" id="max_price" class="form-control" placeholder="不限" min="0">
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <label for="name" class="form-label">商品名称</label>
+                        <input type="text" name="name" id="name" class="form-control" placeholder="输入商品名称">
+                    </div>
+                    <div class="col-md-6">
+                        <button type="submit" class="btn btn-primary mt-4">筛选</button>
+                        <a href="{{ route('product.index') }}" class="btn btn-secondary mt-4">重置筛选</a>
+                    </div>
                 </div>
             </form>
 
-            <table class="table table-striped table-hover">
-                <thead class="table-dark">
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">商品名称</th>
-                    <th scope="col">分类</th>
-                    <th scope="col">品牌</th>
-                    <th scope="col">商品描述</th>
-                    <th scope="col">单价</th>
-                    <th scope="col">库存</th>
-                    <th scope="col">创建时间</th>
-                    <th scope="col">操作</th>
-                </tr>
-                </thead>
-                <tbody>
+
+
+
+            <!-- 商品块显示 -->
+            <div class="row">
                 @foreach($products as $product)
-                    <tr>
-                        <th scope="row">{{ $product->id }}</th>
-                        <td>{{ $product->name }}</td>
-                        <td>{{ $product->category_id}}</td>
-                        <td>{{ $product->brand_id }}</td>
-                        <td>{{ $product->description }}</td>
-                        <td>{{ $product->price }}</td>
-                        <td>{{ $product->stock->quantity ?? 0 }}</td>
-                        <td>{{ $product->created_at }}</td>
-                        <td>
-                            <a href="{{ route('product.show', $product->id) }}" class="btn btn-info btn-sm">详情</a>
-                            <a href="{{ route('product.edit', $product->id) }}" class="btn btn-primary btn-sm">编辑</a>
-                            <a href="{{ route('product.delete', $product->id) }}" class="btn btn-danger btn-sm">删除</a>
-                        </td>
-                    </tr>
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            @if(count($product->images) > 0)
+                                @foreach($product->images as $image)
+                                    @if (str_contains($image->image_url, 'http'))
+                                        <!-- 外部链接图片 -->
+                                        <img src="{{ $image->image_url }}" class="card-img-top" alt="{{ $product->name }}" style="max-width: 200px; height: auto;">
+                                    @else
+                                        <!-- 本地存储图片 -->
+                                        <img src="{{ Storage::url($image->image_url) }}" class="card-img-top" alt="{{ $product->name }}" style="max-width: 200px; height: auto;">
+                                    @endif
+                                @endforeach
+                            @endif
+
+                            <div class="card-body">
+                                <h5 class="card-title">{{ $product->name }}</h5>
+                                <p class="card-text">分类: {{ $product->category_id }}</p>
+                                <p class="card-text">品牌: {{ $product->brand_id }}</p>
+                                <p class="card-text">价格: {{ $product->price }} 元</p>
+                                <p class="card-text">库存: {{ $product->stock->quantity ?? 0 }}</p>
+                                <a href="{{ route('product.show', $product->id) }}" class="btn btn-info btn-sm">详情</a>
+                                <a href="{{ route('product.edit', $product->id) }}"
+                                   class="btn btn-primary btn-sm">编辑</a>
+                                <form action="{{ route('product.destroy', $product->id) }}" method="POST" onsubmit="return confirmDelete();">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger">删除</button>
+                                </form>
+                                <script>
+                                    function confirmDelete() {
+                                        return confirm('您确定要删除这个商品吗？');
+                                    }
+                                </script>
+                            </div>
+                        </div>
+                    </div>
                 @endforeach
-                </tbody>
-            </table>
+            </div>
+
+            <!-- 分页 -->
             <nav aria-label="Page navigation example">
                 <ul class="pagination">
                     <!-- Previous Page Link -->
@@ -108,5 +150,9 @@
 
         </div>
     </div>
-
 @endsection
+
+
+
+
+

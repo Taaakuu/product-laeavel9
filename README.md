@@ -69,3 +69,11 @@ CREATE TABLE product_images (
     FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE COMMENT '外键，关联商品表'
 ) COMMENT '商品图片表，存储商品的图片信息';
 ```
+
+ <!-- 筛选按钮 -->
+            <div class="btn-group mb-3">
+                <a href="{{ route('product.filter', ['type' => 'category']) }}" class="btn btn-secondary">分类</a>
+                <a href="{{ route('product.filter', ['type' => 'brand']) }}" class="btn btn-secondary">品牌</a>
+                <a href="{{ route('product.filter', ['type' => 'price']) }}" class="btn btn-secondary">价格</a>
+                <a href="{{ route('product.filter', ['type' => 'name']) }}" class="btn btn-secondary">名称</a>
+            </div>

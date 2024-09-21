@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use App\Models\Product;      // 导入 Product 模型
+use App\Models\ProductImage; // 导入 ProductImage 模型
 use Illuminate\Support\Facades\DB;
 use Faker\Factory as Faker;
 
@@ -12,12 +14,14 @@ class ProductImagesTableSeeder extends Seeder
     {
         $faker = Faker::create();
 
-        foreach (range(1, 50) as $index) {
-            DB::table('product_images')->insert([
-                'product_id' => $faker->numberBetween(1, 50), // 确保 product_id 在有效范围内
-                'image_url' => $faker->imageUrl(),
-                'created_at' => now(),
-                'updated_at' => now(),
+        // 假设已经有一些商品生成，给每个商品添加图片
+        $products = Product::all();
+
+        foreach ($products as $product) {
+            // 生成一张随机图片
+            ProductImage::create([
+                'product_id' => $product->id,
+                'image_url' => $faker->imageUrl(640, 480, 'business'), // 使用 Faker 生成随机图片
             ]);
         }
     }
